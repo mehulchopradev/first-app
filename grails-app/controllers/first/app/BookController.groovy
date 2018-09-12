@@ -9,7 +9,7 @@ class BookController {
     }
 
     def createAuthors() {
-      def a = new Author(name: 'steve', gender: 'm', rating: 4)
+      def a = new Author(name: 'jude', gender: 'm', rating: 4)
       try {
         def r = a.save(flush: true, failOnError: true)
         println r
@@ -26,6 +26,68 @@ class BookController {
 
       // def authors = Author.list()
       // def maleAuthors = Author.findAllByGender('m')
+
+      //type safe with comile time check on ur queries
+      // loosely coupled way
+      def maleCriteria = Author.where {
+        gender == 'm'
+      }
+
+      def highestRatedMalesCriteria = Author.where {
+        gender == 'm' && rating >= 3
+      }
+
+      def l = maleCriteria.list(sort: 'name', order: 'asc')
+      println l
+      // def cb = Author.createCriteria()
+      /*def aulist = cb.list {
+        eq('gender', 'm')
+        ge('rating', 3)
+        order('name', 'asc')
+      }
+
+      println aulist */
+
+      /* def highestRated = cb.list(max: 3, offset: 0) {
+        projections {
+          property('name')
+          property('rating')
+        }
+        eq('gender', 'm')
+        order('rating', 'desc')
+      }
+
+      highestRated.each {
+        println it[0]
+        println it[1]
+      }
+      println highestRated.totalCount */
+
+      /* def genderAvgRatings = cb.list {
+        projections {
+          groupProperty('gender')
+          avg('rating')
+        }
+      }
+      println genderAvgRatings
+      */
+
+      /* def genderSpecificCounts = cb.list {
+        projections {
+          count('gender')
+          groupProperty('gender')
+        }
+      }
+
+      println genderSpecificCounts */
+
+      /*def maleAuthors = cb.list {
+        or {
+          eq('gender', 'f')
+          le('rating', 1)
+        }
+      }
+      println maleAuthors;*/
       // def authors = Author.list sort: 'name', order: 'asc'
       // println authors
       // def awesomeMaleAuthors = Author.findAllByGenderAndRatingGreaterThan('m', 2, [sort: 'rating', order: 'asc'])
@@ -36,22 +98,47 @@ class BookController {
       // def lowestRating = Author.first sort: 'rating', order: 'asc'
       // println lowestRating
 
-      def ratingFilter = 4
+      //def ratingFilter = 4
 
       // def authors = Author.findAll('from Author a where a.rating >= ?', [ratingFilter]) //HQL
-      def authors = Author.findAll('from Author a where a.gender = :gender and a.rating >= :rating order by a.name desc',
+      /*def authors = Author.findAll('from Author a where a.gender = :gender and a.rating >= :rating order by a.name desc',
         [gender: 'm', rating: 3])
-      println authors
+      println authors*/
 
       render "done"
     }
 
     def queryBooks() {
-      def book = Book.get(2)
+      // def book = Book.get(2)
       /* book.reviews.each { // lazy relationship
         println it.description
       } */
+      /* def booksForIsbn = Book.where {
+        bookDetail.isbn == 'fdgfd980870'
+      }
+
+      def l = booksForIsbn.list()
+      println l */
+      /* def cb = Book.createCriteria()
+      def l = cb.list {
+        bookDetail {
+          eq('isbn', 'fdgfd980870')
+        }
+      }
+      println l */
+
+      def topAuthorBooks = Book.where {
+        authors.rating >= 4
+      }
+
+      def l = topAuthorBooks.list()
+      println l
       render "done"
+
+
+
+
+
     }
 
     def updateAuthor() {
@@ -74,7 +161,7 @@ class BookController {
 
     def dummySave() {
       def a1 = Author.get(1)
-      def a2 = Author.get(2)
+      def a2 = Author.get(5)
 
       // dynamic addTo* works with one to many collection
       def b = new Book(title: 'prog in scala', pages: 900, price: 876,
