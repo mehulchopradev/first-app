@@ -7,6 +7,7 @@ class Account {
     Float balance
 
     static constraints = {
+      balance min: 1000F
     }
 
     static mapping = {
