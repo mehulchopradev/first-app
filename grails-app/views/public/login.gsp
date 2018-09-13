@@ -9,21 +9,25 @@
     <g:if test="${message}">
       <font color="green">${message}</font>
     </g:if>
+    <g:if test="${flash.errorMessage}">
+      <font color="red">${flash.errorMessage}</font>
+    </g:if>
+
 
     <div class="form-area">
       <h2>Authenticate Urself</h2>
-      <form>
+      <g:form name="loginForm" action="authenticate" controller="private">
         <p>
-          <input placeholder="Enter Username">
+          <g:textField name="username" placeholder="Enter username"/>
         </p>
         <p>
-          <input type="password" placeholder="Enter Password">
+          <g:passwordField name="password" placeholder="Enter password"/>
         </p>
         <p>
-          <input type="submit" value="Login">
+          <g:submitButton name="submit" value="Login" />
           <g:link action="register">Register</g:link>
         </p>
-      </form>
+      </g:form>
       <i>Page Accessed at : ${currentTimestamp}</i>
     </div>
   </body>

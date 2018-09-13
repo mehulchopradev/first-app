@@ -7,10 +7,11 @@
   </head>
   <body>
     <div class="form-area">
+      <g:renderErrors bean="${user}" as="list"/>
       <h2>Register Urself</h2>
       <g:uploadForm controller="private" action="register">
         <p>
-          <g:textField name="username" placeholder="Enter Username" />
+          <g:textField name="username" placeholder="Enter Username" value="${user.username}" />
         </p>
         <p>
           <g:passwordField name="password" placeholder="Enter Password" />
@@ -26,11 +27,11 @@
             from="${countries}"
             optionValue="fullName"
             optionKey="code"
-            value="${selectedCountry}"/>
+            value="${user.country}"/>
         </p>
         <p>
           Gender:
-          <g:radioGroup name="gender" labels="['Male','Female']" values="['M','F']">
+          <g:radioGroup name="gender" labels="['Male','Female']" values="['m','f']" value="${user.gender}">
             ${it.radio}&nbsp;${it.label}
           </g:radioGroup>
         </p>

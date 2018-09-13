@@ -18,6 +18,39 @@ class AccountService {
       account.save()
     }
 
+    @Transactional(readOnly=true)
+    def getAllAccounts() {
+      Account.list()
+    }
+
+    @Transactional(readOnly=true)
+    def getAccountById(Long id) {
+      Account.get(id)
+    }
+
+    def updateAccount(Long id, String accName, Float balance) {
+      def account = Account.get(id)
+      if (!account) {
+        throw new RuntimeException('Account not found')
+      }
+
+      account.accName = accName
+      account.balance = balance
+
+      if (!account.save(flush: true)) {
+        throw new AccountSaveException(account, 'Could not save account')
+      }
+    }
+
+    def deleteAccount(Long id) {
+      def a = Account.get(id)
+      if (!a) {
+        throw new RuntimeException('Account not found')
+      }
+
+      a.delete(flush: true)
+    }
+
     def performTransfer(Long fromId, Long toId, Float amountToTransfer) {
       // business logic
       // ACID

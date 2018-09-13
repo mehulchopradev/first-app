@@ -73,13 +73,32 @@ class PrivateController {
       // save the data in some persistent store (Database)
       // ORM (GORM)
       def u = new User(username: user.username, password: user.password, country: user.country, gender: user.gender)
-      u.save()
+      if(!u.save(flush: true)) {
+        flash.user = u
+        redirect action: 'register', controller: 'public'
+      } else {
+        // take the end user to the login page
 
-      // take the end user to the login page
+        // some data to be stored and accessible in the request(2) after this request(1)
+        flash['message'] = 'Register Success. Please Login'
 
-      // some data to be stored and accessible in the request(2) after this request(1)
-      flash['message'] = 'Register Success. Please Login'
+        redirect(controller: 'public', action: 'login')
+      }
+    }
 
-      redirect(controller: 'public', action: 'login')
+    def authenticate(String username, String password) {
+      def user = User.findByUsernameAndPassword(username, password);
+      if (!user) {
+        flash.errorMessage = 'Invalid username or password'
+        redirect controller: 'public', action: 'login'
+      } else {
+        session.user = user
+        redirect controller: 'home', action: 'index'
+      }
+    }
+
+    def logout() {
+      session.invalidate()
+      redirect controller: 'public', action: 'login'
     }
 }

@@ -20,6 +20,8 @@ class User {
       password maxSize: 30, minSize: 5, blank: false
       country maxSize: 15, nullable: true
       gender inList: ['m','f']
+      marks nullable: true
+      contact nullable: true
     }
 
     static mapping = {

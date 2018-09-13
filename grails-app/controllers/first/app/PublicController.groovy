@@ -22,6 +22,13 @@ class PublicController {
         new Country(code: 'CH', fullName: 'China')
       ]
 
-      [countries: countries, selectedCountry: 'US']
+      def u
+      if (flash.user) {
+        u = flash.user
+      } else {
+        u = new User()
+      }
+
+      [countries: countries, selectedCountry: 'US', user: u]
     }
 }
